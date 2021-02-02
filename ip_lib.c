@@ -495,6 +495,34 @@ ip_mat *ip_mat_concat(ip_mat *a, ip_mat *b, int dimensione)
     }
 }
 
+ip_mat * ip_mat_mul(ip_mat *a, ip_mat * b){
+    if(a && b){
+        if(a->h == b->h && a->w ==b->w && a->k == b->k){
+            unsigned int h = a->h;
+            unsigned int w = a->w;
+            unsigned int k = a->k;
+            unsigned int ih, iw, ik, i;
+            float val_a, val_b;
+            ip_mat *new = ip_mat_create(h, w, k, 0.f);
+            for(i=0; i < h*w*k; i++){
+                compute_indexes(i, &ih, &iw, &ik, w, k);
+                val_a = get_val(a, ih, iw, ik);
+                val_b = get_val(b, ih, iw, ik);
+                set_val(new, ih, iw, ik, val_a*val_b);
+            }
+            return new;
+        }
+        else{
+            printf("Errore ip_mat_mul: dimensioni di a e b diverse");
+            exit(1);
+        }
+    }
+    else{
+        printf("Errore ip_mat_mul: a o b sono NULL"); 
+        exit(1);
+    }
+}
+
 /**** PARTE 2 ****/
 
 ip_mat *ip_mat_brighten(ip_mat *a, float bright)
@@ -568,6 +596,53 @@ ip_mat *ip_mat_corrupt(ip_mat *a, float amount)
     else
     {
         printf("Errore ip_mat_corrupt: a era NULL\n");
+        exit(1);
+    }
+}
+
+ip_mat * ip_mat_warhol(ip_mat * in){
+    if(in){
+        ip_mat *up, *down; 
+        ip_mat *up_right, *down_left, *down_right;
+        
+        unsigned int i, ih, iw, ik;
+        up_right = ip_mat_create(in->h, in->w, in->k, 0.0f);
+        for(i=0; i< in->h * in->w * in->k; i++){
+            compute_indexes(i, &ih, &iw, &ik, in->w, in->k);
+            if(ik == 0)
+                set_val(up_right, ih, iw, ik, get_val(in, ih, iw, ik+1));
+            else if(ik == 1)
+                set_val(up_right, ih, iw, ik, get_val(in, ih, iw, ik-1));
+            else
+                set_val(up_right, ih, iw, ik, get_val(in, ih, iw, ik));
+        }
+        up = ip_mat_concat(in, up_right, 1);
+        down_left = ip_mat_create(in->h, in->w, in->k, 0.0f);
+        for(i=0; i< in->h * in->w * in->k; i++){
+            compute_indexes(i, &ih, &iw, &ik, in->w, in->k);   
+            if(ik == 1)
+                set_val(down_left, ih, iw, ik, get_val(in, ih, iw, ik+1));
+            else if(ik == 2)
+                set_val(down_left, ih, iw, ik, get_val(in, ih, iw, ik-1));
+            else
+                set_val(down_left, ih, iw, ik, get_val(in, ih, iw, ik));
+        }
+        down_right = ip_mat_create(in->h, in->w, in->k, 0.0f);
+        for(i=0; i< in->h * in->w * in->k; i++){
+            compute_indexes(i, &ih, &iw, &ik, in->w, in->k);
+            if(ik == 0)
+                set_val(down_right, ih, iw, ik, get_val(in, ih, iw, ik+2));
+            else if(ik == 2)
+                set_val(down_right, ih, iw, ik, get_val(in, ih, iw, ik-2));
+            else
+                set_val(down_right, ih, iw, ik, get_val(in, ih, iw, ik));
+        }
+        down = ip_mat_concat(down_left, down_right, 1);
+        return ip_mat_concat(up, down, 0);
+        
+    }
+    else{
+        printf("Errore ip_mat_warhol: la matrice è NULL");
         exit(1);
     }
 }

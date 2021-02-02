@@ -12,7 +12,7 @@ void show_help(){
     printf("*** Image Processing Toolbox ***\n");
     printf("\targ 1: input file name (img1) \n");
     printf("\targ 2: input file name (img2) \n");
-    printf("\targ 3: operazione da effettuare (corrupt, gray, gray_lum, gray_gamma, brighten, blend, sharp, edge, emboss, avg, gauss, copy) \n");
+    printf("\targ 3: operazione da effettuare (corrupt, gray, gray_lum, gray_gamma, brighten, blend, sharp, edge, emboss, avg, gauss, copy, warhol) \n");
     printf("\targ 4: output file name\n");
     printf("\targ 5: Se 1 concatena la/le immagini di input con quella di output\n");
     printf("\targ 6: Diversi significati in funzione dell'operazione (default 3):\n"
@@ -105,6 +105,9 @@ int main (int argc, char * argv[]) {
     }
     else if (strcmp(operation, "copy") == 0) {
         img = ip_mat_copy_mem(input_img);
+    }
+    else if (strcmp(operation, "warhol") == 0) {
+        img = ip_mat_warhol(input_img);
     }
     else if (strcmp(operation, "sharp") == 0) {
         filter = create_sharpen_filter(); /* crea un filtro di sharpening */

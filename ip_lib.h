@@ -140,6 +140,17 @@ ip_mat * ip_mat_add_scalar(ip_mat *a, float c);
  */
 ip_mat * ip_mat_mean(ip_mat * a, ip_mat * b);
 
+/* Moltiplica un ip_mat "a" per un ip_mat "b". Il prodotto tra i due tensori avviene cella per cella. 
+ *
+ * c[i][j][k] = a[i][j][k] * b[i][j][k]
+ *
+ * Se "a" e "b" hanno dimensioni diverse allora l'operazione non e' possibile ( uscite con exit(1)).
+ *
+ * Il risultato viene salvato e restituito in output all'interno di una nuova ip_mat.
+ * 
+ */
+ip_mat * ip_mat_mul(ip_mat *a, ip_mat * b);
+
 /**** PARTE 2: SEMPLICI OPERAZIONI SU IMMAGINI ****/
 /* Converte un'immagine RGB ad una immagine a scala di grigio.
  * Quest'operazione viene fatta calcolando la media per ogni pixel sui 3 canali
@@ -150,6 +161,21 @@ ip_mat * ip_mat_mean(ip_mat * a, ip_mat * b);
  * all'interno di una nuova ip_mat.
  * */
 ip_mat * ip_mat_to_gray_scale(ip_mat * in);
+
+/*
+ *  Data una immagine di input crea un’immagine nuova in stile “Andy Warhol”.
+ *  L’immagine risultante è una composizione di 4 immagini così realizzate:
+ * - In alto a sinistra viene replicata l’immagine originale
+ * - In alto a destra, a partire dall’immagine originale, viene invertito il canale Rosso con il canale Verde
+ * - In basso a sinistra, a partire dall’immagine originale, viene invertito il canale Verde con il canale Blu
+ * - In basso a destra, a partire dall’immagine originale, viene invertito il canale Rosso con il canale Blu
+ * 
+ * L’immagine finale avrà quindi dimensione doppia dell’originale (a parte nel numero di canali) in quanto le 
+ * 4 immagini saranno concatenate per formarne una unica.
+ * 
+ */
+
+ip_mat * ip_mat_warhol(ip_mat * in);
 
 /* Effettua la fusione (combinazione convessa) di due immagini.
  *
