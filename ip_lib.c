@@ -642,7 +642,7 @@ ip_mat * ip_mat_warhol(ip_mat * in){
         
     }
     else{
-        printf("Errore ip_mat_warhol: la matrice è NULL");
+        printf("Errore ip_mat_warhol: la matrice di input è NULL");
         exit(1);
     }
 }
